@@ -1,12 +1,12 @@
 ---
 - name: deply webapp yum repo
-  copy:
-    src: "{{ webapp }}.repo"
+  template:
+    src: "{{ webapp }}.repo.j2"
     dest: "/etc/yum.repos.d/{{ webapp }}.repo"
 
 - name: Install webapp package
   yum:
-    name: "{{ webapp }}"
-    version: "{{ webapp_version }}"
+    name: "{{ webapp }}-{{ webapp_version }}"
     state: present
-
+    update_cache: yes
+    allow_downgrade: yes

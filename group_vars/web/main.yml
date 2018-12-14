@@ -1,0 +1,39 @@
+---
+# Variables for the web server configuration
+
+# Ethernet interface on which the web server should listen.
+# Defaults to the first interface. Change this to:
+#
+#  iface: eth1
+#
+# ...to override.
+#
+iface: '{{ ansible_default_ipv4.interface }}'
+
+apache_create_vhosts: true
+apache_remove_default_vhost: true
+apache_mods_enabled:
+  - rewrite.load
+  - ssl.load
+  - headers.load
+  - vhost_alias.load
+apache_global_vhost_settings: |
+  Servername {{ ansible_hostname }}
+  Header always unset "X-Powered-By"
+  ServerTokens Prod
+  ServerSignature Off
+  DirectoryIndex index.shtml index.php index.html
+  CustomLog /var/log/httpd/other_vhosts_access.log vhost_combined
+  # Sortable log format 
+  LogFormat {% raw %}"%v:%p %{%F %T}t.%{usec_frac}t %h \"%r\" %>s %O \"%{Referer}i\" \"%{User-Agent}i\""{% endraw %} vhost_combined
+
+apache_vhosts:
+  - servername: "{{ webapp_vhosts[0] }}"
+    serveralias: "{{ webapp_vhosts[1] }}"
+    extra_parameters: |
+      DocumentRoot /usr/share/{{ webapp }}/wwwroot 
+      <Directory "/usr/share/{{ webapp }}/wwwroot">
+        Options +Includes
+        AddType text/html .shtml
+        AddHandler server-parsed .shtml .html
+      </Directory>
