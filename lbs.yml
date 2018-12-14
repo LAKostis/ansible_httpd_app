@@ -1,0 +1,6 @@
+---
+# file: lbs.yml
+- hosts: lbs
+  gather_facts: False
+  roles:
+    - haproxy

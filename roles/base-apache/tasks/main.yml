@@ -1,0 +1,13 @@
+---
+# This role installs httpd
+
+- name: Install http
+  yum:
+    name: httpd
+    state: present
+
+- name: http service state
+  service:
+    name: httpd
+    state: started
+    enabled: yes
