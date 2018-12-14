@@ -1,0 +1,40 @@
+---
+# This playbook does a rolling update for all webservers serially (one at a time).
+# Change the value of serial: to adjust the number of server to be updated.
+#
+# The three roles that apply to the webserver hosts will be applied: common,
+# base-apache, and web. So any changes to configuration, package updates, etc,
+# will be applied as part of the rolling update process.
+#
+
+
+- hosts: backends
+  serial: 1
+
+  vars_files:
+    - group_vars/web/main.yml
+    - group_vars/web/vaulted_vars.yml
+
+  become: True
+
+  # These are the tasks to run before applying updates:
+  pre_tasks:
+  - name: disable the server in haproxy
+    haproxy: 'state=disabled backend=myapplb host={{ inventory_hostname }} socket=/var/lib/haproxy/stats'
+    delegate_to: "{{ item }}"
+    with_items: "{{ groups.lbs }}"
+
+  roles:
+  - common
+  - geerlingguy.apache
+  - web
+
+  # These tasks run after the roles:
+  post_tasks:
+  - name: wait for webserver to come up
+    service: name=httpd state=started
+
+  - name: enable the server in haproxy
+    haproxy: 'state=enabled backend=myapplb host={{ inventory_hostname }} socket=/var/lib/haproxy/stats'
+    delegate_to: "{{ item }}"
+    with_items: "{{ groups.lbs }}"
