@@ -12,7 +12,7 @@ This app allows to install simple webapp to multiple backends (httpd) with load-
 ### Features
 
 - allows to roll out new version, roll back to older version, re-deploy current version.
-- application should pulled by the server on which the application is to be installed. 
+- application can be pulled by the server on which the application is to be installed. 
 - not pushing from a central location.
 
 ### Initial site setup
