@@ -1,6 +1,12 @@
 ---
-#- name: Copy the code from repository
-#  git:
-#    repo: "{{ repository }}"
-#    version: "{{ webapp_version }}"
-#    dest: /var/www/html/
+- name: deply webapp yum repo
+  copy:
+    src: "{{ webapp }}.repo"
+    dest: "/etc/yum.repos.d/{{ webapp }}.repo"
+
+- name: Install webapp package
+  yum:
+    name: "{{ webapp }}"
+    version: "{{ webapp_version }}"
+    state: present
+

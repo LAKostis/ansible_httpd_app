@@ -1,0 +1,6 @@
+[myapp]
+name=Example Repository
+baseurl=http://lakostis.unsafe.ru/misc/tmp/texkernel/myapp
+enabled=1
+gpgcheck=0
+

@@ -13,6 +13,7 @@ Vagrant.configure("2") do |config|
     ansible.playbook = "site.yml"
     ansible.groups   = {
   	"backends" => ["backend[1:3]"],
+  	"web" => ["backend[1:3]"],
   	"lbs" => ["lb"],
   	"all:children" => ["backends", "lbs"],
     }
@@ -23,4 +24,3 @@ Vagrant.configure("2") do |config|
     }
   end
 end
-
