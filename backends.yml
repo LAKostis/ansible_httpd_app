@@ -3,6 +3,5 @@
 - hosts: backends
   gather_facts: False
   roles:
-    - base-apache
     - geerlingguy.apache
     - web
