@@ -20,9 +20,12 @@
   # These are the tasks to run before applying updates:
   pre_tasks:
   - name: disable the server in haproxy
-    haproxy: 'state=disabled backend=myapplb host={{ inventory_hostname }} socket=/var/lib/haproxy/stats'
-    delegate_to: "{{ item }}"
-    with_items: "{{ groups.lbs }}"
+    iptables:
+      chain: INPUT
+      protocol: tcp
+      source: "{{ hostvars['lb']['ipaddr'] }}"
+      destination_port: 80
+      jump: REJECT
 
   roles:
   - common
@@ -32,9 +35,9 @@
   # These tasks run after the roles:
   post_tasks:
   - name: wait for webserver to come up
-    service: name=httpd state=started
+    wait_for: 'host=localhost port=80 state=started timeout=80'
 
   - name: enable the server in haproxy
-    haproxy: 'state=enabled backend=myapplb host={{ inventory_hostname }} socket=/var/lib/haproxy/stats'
-    delegate_to: "{{ item }}"
-    with_items: "{{ groups.lbs }}"
+    iptables:
+      chain: INPUT
+      flush: yes
