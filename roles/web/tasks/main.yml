@@ -1,5 +1,5 @@
 ---
-- name: deply webapp yum repo
+- name: deploy webapp yum repo
   template:
     src: "{{ webapp }}.repo.j2"
     dest: "/etc/yum.repos.d/{{ webapp }}.repo"
