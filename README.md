@@ -45,8 +45,8 @@ hosts, this behaviour can be changed by setting the 'serial' keyword in
 rolling_update.yml file.
 
 Once the code has been updated in the source repository for your application
-which can be defined in the group_vars/all file, execute the following
-command:
+which can be defined in the group_vars/web/vaulted_vars.yml file, execute 
+the following command:
 
          ansible-playbook --ask-vault-pass -i hosts rolling_update.yml
 
