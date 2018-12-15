@@ -36,4 +36,5 @@ apache_vhosts:
         Options +Includes
         AddType text/html .shtml
         AddHandler server-parsed .shtml .html
+        Require all granted
       </Directory>
