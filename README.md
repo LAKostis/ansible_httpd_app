@@ -4,10 +4,10 @@ Simple httpd webapp deploy and rolling updates procedure
 - Requires Ansible 2+
 - CentOS 7.x
 - httpd
-- haproxy
+- nginx
 - php
 
-This app allows to install simple webapp to multiple backends (httpd) with load-balancer (haproxy).
+This app allows to install simple webapp to multiple backends (httpd) with load-balancer (nginx).
 
 ### Features
 
