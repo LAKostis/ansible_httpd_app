@@ -2,5 +2,41 @@
 # file: lbs.yml
 - hosts: lbs
   gather_facts: False
+
+  pre_tasks:
+    - name: "Register backend servers"
+      set_fact:
+        nginx_backends: "{{ nginx_backends | default({}) | combine({item:{'port':80,'address':hostvars[item]['ipaddr']}}) }}"
+      with_items: "{{ backend_servers }}"
+    - name: "SELinux permit nginx to bind lb port"
+      seport:
+        ports: "{{ nginx_lb_port }}"
+        proto: tcp
+        setype: http_port_t
+        state: present
+
   roles:
-    - haproxy
+    - role: nginxinc.nginx
+      nginx_http_template:
+        default:
+          template_file: http/default.conf.j2
+          conf_file_name: default.conf
+          conf_file_location: /etc/nginx/conf.d/
+          port: "{{ nginx_lb_port }}"
+          server_name: "{{ ansible_hostname }}"
+          error_page: /usr/share/nginx/html
+          autoindex: false
+          load_balancer:
+            locations:
+              backend:
+                location: /
+                proxy_pass: backend
+            health_check_plus: false
+          upstreams:
+            myapp:
+              name: backend
+              lb_method: least_conn
+              zone_name: backend
+              zone_size: 64k
+              sticky_cookie: false
+              servers: "{{ nginx_backends }}"

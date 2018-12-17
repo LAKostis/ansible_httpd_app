@@ -1,0 +1,5 @@
+---
+nginx_http_template_enable: true
+nginx_lb_port: 8888
+backend_servers: "{{ groups['backends'] }}"
+

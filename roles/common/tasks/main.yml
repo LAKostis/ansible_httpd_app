@@ -6,6 +6,7 @@
     name:
       - libselinux-python
       - libsemanage-python
+      - policycoreutils-python
     state: present
 
 - name: Create the repository for EPEL

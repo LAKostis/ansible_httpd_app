@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
     ansible.raw_arguments  = "--vault-password-file vault_pw"
     ansible.become   = true
     ansible.verbose  = true
-    ansible.playbook = "rolling_update.yml"
+    ansible.playbook = "site.yml"
     ansible.groups   = {
   	"backends" => ["backend[1:3]"],
   	"web" => ["backend[1:3]"],
